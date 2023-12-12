@@ -9,10 +9,10 @@ const assert = require('assert');
 const url = 'mongodb://localhost:27017';
 //const url = 'mongodb://mongo:primitive1A@219.94.241.56:27017';
 const dbName = 'myMongo';
-const connectOption = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-}
+// const connectOption = {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+// }
 
 app.use(session({
     secret: 'keyboard cat',
@@ -66,12 +66,12 @@ const initPages = async () => {
 
   let client;
   try {
-    client = await MongoClient.connect(url, connectOption);
+    client = await MongoClient.connect(url);
     const db = client.db(dbName);
     const collection = db.collection('account');
     await collection.find({}).toArray( async (err, docs) => {
         for (const doc of docs) {
-          let client2 = await MongoClient.connect(url, connectOption);
+          let client2 = await MongoClient.connect(url);
           const db2 = client2.db(dbName);
           const collection2 = db2.collection('page');
           if (doc.name) {
@@ -127,7 +127,7 @@ initPages();
 const deleteData = async () => {
   let client;
   try {
-    client = await MongoClient.connect(url, connectOption);
+    client = await MongoClient.connect(url);
     const db = client.db(dbName);
     const collection = db.collection('account');
     await collection.deleteMany({});
@@ -138,7 +138,7 @@ const deleteData = async () => {
   }
   let client2;
   try {
-    client2 = await MongoClient.connect(url, connectOption);
+    client2 = await MongoClient.connect(url);
     const db2 = client2.db(dbName);
     const collection2 = db2.collection('page');
     await collection2.deleteMany({});
@@ -156,7 +156,7 @@ const transactionDownloadMyPage = async (req, res) => {
   let data = {name: req.session.name, pageName: req.body.pageName};
   data = Object.assign(data, {date: new Date() });
   try {
-    client = await MongoClient.connect(url, connectOption);
+    client = await MongoClient.connect(url);
     const db = client.db(dbName);
     const collection = db.collection('account');
 
@@ -177,7 +177,7 @@ const transactionDownloadPageText = async (req, res) => {
   let data = {name: req.session.name, pageName: req.body.pageName};
   data = Object.assign(data, {date: new Date() });
   try {
-    client = await MongoClient.connect(url, connectOption);
+    client = await MongoClient.connect(url);
     const db = client.db(dbName);
     const collection = db.collection('page');
 
@@ -197,7 +197,7 @@ const transactionSaveText = async (req, res) => {
   let data = {name: req.session.name, pageName: req.body.pageName};
   data = Object.assign(data, {date: new Date() });
   try {
-    client = await MongoClient.connect(url, connectOption);
+    client = await MongoClient.connect(url);
     const db = client.db(dbName);
     const collection = db.collection('page');
 
@@ -224,7 +224,7 @@ const transactionCreatePage = async (req, res) => {
   let data = {name: req.session.name, pageName: req.body.pageName};
   data = Object.assign(data, {date: new Date() });
   try {
-    client = await MongoClient.connect(url, connectOption);
+    client = await MongoClient.connect(url);
     const db = client.db(dbName);
     const collection = db.collection('page');
 
@@ -254,7 +254,7 @@ const transactionCreatePage = async (req, res) => {
 
 
 
-    let client2 = await MongoClient.connect(url, connectOption);
+    let client2 = await MongoClient.connect(url);
     const db2 = client2.db(dbName);
     const collection2 = db2.collection('account');
 
@@ -281,7 +281,7 @@ const transactionDownload = async (req, res, data) => {
     let client;
     let login = false;
     try {
-      client = await MongoClient.connect(url, connectOption);
+      client = await MongoClient.connect(url);
       const db = client.db(dbName);
       const collection = db.collection('account');
         await collection.find({}).toArray( (err, docs) => {
@@ -321,7 +321,7 @@ const transactionInsert = async (data, res) => {
     let client;
     data = Object.assign(data, {date: new Date() });
     try {
-      client = await MongoClient.connect(url, connectOption);
+      client = await MongoClient.connect(url);
       const db = client.db(dbName);
       const collection = db.collection('account');
 
@@ -353,7 +353,7 @@ app.post('/signup', async (req, res) => {
     let client;
     let exist = false;
     try {
-      client = await MongoClient.connect(url, connectOption);
+      client = await MongoClient.connect(url);
       const db = client.db(dbName);
       const collection = db.collection('account');
         await collection.find({}).toArray( (err, docs) => {

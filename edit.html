@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>edit page</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="./edit.css">
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <script>
+            const path = location.pathname.split("/");
+            console.log(path);
+            const data = {name: path[1], pageName: path[2] };
+            const param = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            };
+            fetch("/newpage", param).then(res => res.json()).then(data => {
+                document.getElementById("pageName").textContent = data.pageName;
+                document.getElementById("textarea").value = data.text;
+                if (data.text) {
+                    document.getElementById("preview").innerHTML = marked.parse(data.text);
+                }
+            });
+
+            document.addEventListener("keydown", (e) => {
+                document.getElementById("preview").innerHTML =
+                marked.parse(document.getElementById("textarea").value);
+            })
+        </script>
+    </head>
+    <body>
+        <header>
+            <h1>uuja</h1>
+        </header>
+        <article>
+            <section id="pageName">
+            </section>
+            <section>
+                <div>
+                    <textarea id="textarea"></textarea>
+                    <button id="save">保存</button>
+                </div>
+                <div id="preview">
+                </div>
+            </section>
+        </article>
+        <footer>
+            <small>&copy; copyright uuja 2024</small>
+        </footer>
+        <script>
+            document.getElementById("save").addEventListener("click", (e) => {
+                const path = location.pathname.split("/");
+                const data = {name: path[1], pageName: path[2], text: document.getElementById("textarea").value};
+                const param = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                };
+                fetch("/savetext", param).then(res => res.json()).then(data => {
+                    document.getElementById("save").textContent = data.result;
+                });
+            })
+        </script>
+    </body>
+</html>

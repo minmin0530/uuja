@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>uuja</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="./style.css">
+    </head>
+    <body>
+        <header>
+            <h1>uuja</h1>
+        </header>
+        <article>
+            <section>
+                <button id="mypage">my page</button>
+            </section>
+        </article>
+        <footer>
+            <small>&copy; copyright uuja 2024</small>
+        </footer>
+        <script>
+            const param = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            };
+            fetch("/mypage", param).then(res => res.json()).then(data => {
+                document.getElementById("mypage").addEventListener("click", (e) => {
+                    location.href = "/" + data.name;
+                });
+            });
+        </script>
+    </body>
+</html>

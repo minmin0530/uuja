@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>my page</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="./style.css">
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <script>
+            document.addEventListener("keydown", (e) => {
+                document.getElementById("preview").innerHTML =
+                marked.parse(document.getElementById("textarea").value);
+            })
+        </script>
+    </head>
+    <body>
+        <header>
+            <h1>uuja</h1>
+        </header>
+        <article>
+            <section id="myname">
+            </section>
+            <section>
+                <input id="pageName" type="text" placeholder="page name"></input>
+            </section>
+            <section>
+                <button id="createPage">ページ作成</button>
+            </section>
+            <section>
+                <button id="newPage"></button>
+            </section>
+
+            <section id="pageNames">
+                
+            </section>
+
+        </article>
+        <footer>
+            <small>&copy; copyright uuja 2024</small>
+        </footer>
+        <script>
+            const param2 = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            };
+            fetch("/mypage", param2).then(res => res.json()).then(data => {
+                document.getElementById("myname").textContent = data.name;
+
+                console.log(data);
+                if (data.pageNames && data.pageNames.length > 0) {
+                    console.log(11111);
+                    document.getElementById("pageNames").innerHTML = ``;
+                    // <div>
+                    //     <textarea id="textarea"></textarea>
+                    //     <button id="save">保存</button>
+                    // </div>
+                    // <div id="preview">
+                    // </div>
+                    // `;
+
+                    for (const pageName of data.pageNames) {
+                        console.log(pageName);
+                        document.getElementById("pageNames").innerHTML += "<button id='" + pageName + "'>" + pageName + "</button>";
+
+
+
+                        // document.getElementById("save").addEventListener("click", (e) => {
+                        //     if (document.getElementById("save") != true) {   
+                        //         const data4 = {name: data.name, pageName: pageName, text: document.getElementById("textarea").value};
+                        //         const param4 = {
+                        //             method: "POST",
+                        //             headers: {
+                        //                 "Content-Type": "application/json"
+                        //             },
+                        //             body: JSON.stringify(data4)
+                        //         };
+                        //         fetch("/savetext", param4).then(res => res.json()).then(data5 => {
+                        //             document.getElementById("save").textContent = data5.result;
+                        //             document.getElementById("save").disabled = true;
+                        //         });
+                        //     }
+                        // })
+
+
+                        document.getElementById("pageNames").addEventListener("click", (e) => {
+                            if (e.target.id == pageName) {
+
+                                location.href = "/" + data.name + "/" + pageName + "/edit";
+                                // console.log(e.target.id);
+                                // const data2 = {name: data.name, pageName: pageName };
+                                // const param3 = {
+                                //     method: "POST",
+                                //     headers: {
+                                //         "Content-Type": "application/json"
+                                //     },
+                                //     body: JSON.stringify(data2)
+                                // };
+                                // fetch("/newpage", param3).then(res => res.json()).then(data3 => {
+                                //     console.log(data3);
+                                //     document.getElementById("pageName").textContent = data3.pageName;
+                                //     document.getElementById("textarea").value = data3.text;
+                                //     document.getElementById("preview").innerHTML =
+                                //     marked.parse(document.getElementById("textarea").value);
+                                // });
+
+
+
+
+
+
+                            }
+                        });
+
+
+
+
+
+
+                    }
+
+                }
+            });
+
+            document.getElementById("createPage").addEventListener("click", (e) => {
+                const data = {pageName: document.getElementById("pageName").value};
+
+                const paramCreatePage = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data),
+                };
+                fetch("/createpage", paramCreatePage).then(res => res.json()).then(data => {
+                    document.getElementById("newPage").innerHTML = "<a href='/" + data.name + "/" + data.pageName + "'>" + data.pageName + "</a>";
+                });
+
+            });
+
+        </script>
+    </body>
+</html>

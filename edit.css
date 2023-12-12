@@ -1,0 +1,66 @@
+body {
+    margin: 0;
+}
+
+article {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+section {
+    margin: 36px;
+    width: 1300px;
+    display: flex;
+}
+
+#pageName {
+    align-items: center;
+}
+
+input {
+    width: 300px;
+    height: 30px;
+    border-radius: 10px;
+    padding: 20px;
+    font-size: large;
+    font-weight: bold;
+}
+
+button {
+    width: 200px;
+    background: red;
+    color: white;
+    border-radius: 10px;
+    border: none;
+    padding: 10px;
+    font-size: large;
+    font-weight: bold;
+}
+
+footer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+textarea {
+    width: 600px;
+    height: 600px;
+    margin-bottom: 30px;
+}
+
+#preview {
+    width: 600px;
+    height: 600px;
+    border: 1px solid;
+}
+div h1 {
+    width: 100%;
+    font-size: 2em;
+    border-bottom: 1px solid #cccccc;
+}

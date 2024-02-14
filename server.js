@@ -14,6 +14,18 @@ const dbName = 'myMongo';
 //     useUnifiedTopology: true,
 // }
 
+const io = require('socket.io')(http);
+// const io = require('socket.io')(server, {
+//   //const io = new Server(http, {
+//     allowEIO4: true,
+//     cors: {
+//       origin: "https://sphere-online.com",
+//       methods: ["GET", "POST"],
+//       allowedHeaders: ["my-custom-header"],
+//       credentials: true
+//     }
+//   });
+
 app.use(session({
     secret: 'keyboard cat',
     resave: false,
@@ -107,6 +119,18 @@ const initPages = async () => {
                   });
                   app.get("/" + doc2.name + "/" + doc2.pageName + "/edit.css", (req, res) => {
                     res.sendFile(__dirname + "/edit.css");
+                  });
+                  app.get("/" + doc2.name + "/" + doc2.pageName + "/racegame.js", (req, res) => {
+                    res.sendFile(__dirname + "/racegame.js");
+                  });
+                  app.get("/" + doc2.name  + "/background.png", (req, res) => {
+                    res.sendFile(__dirname + "/background.png");
+                  });
+                  app.get("/" + doc2.name  + "/ball.png", (req, res) => {
+                    res.sendFile(__dirname + "/ball.png");
+                  });
+                  app.get("/" + doc2.name  + "/hina.png", (req, res) => {
+                    res.sendFile(__dirname + "/hina.png");
                   });
 
                 }          
@@ -415,6 +439,37 @@ app.post("/createpage", (req, res) => {
 app.post("/savetext", (req, res) => {
     transactionSaveText(req, res);
 });
+
+
+const updateRoomMember = async (data) => {
+  let client;
+  try {
+    client = await MongoClient.connect(url, connectOption);
+    const db = client.db(dbName);
+    const collection = db.collection('room');
+    await collection.updateOne({_id: ObjectId(data.roomid) }, {$push : {memberid: data.playerid, membercolor: data.color, membername: data.playername} }, {upsert: true} );
+    const roomData = await collection.findOne({_id: ObjectId(data.roomid) });
+    io.to(data.roomid).emit("updateRoomData", roomData);
+  } catch (error) {
+    console.log(error);
+  } finally {
+//    client.close();
+  }
+}
+
+
+
+io.on('connection', socket => {
+
+  socket.on('getUserId', data => {
+    socket.join(data.roomid);
+    updateRoomMember(data);
+  });
+  socket.on('pushUpKey', data => {
+    io.to(data.roomid).emit('pushUpKey', data);
+  });
+});
+
 
 const port = 80;
 app.listen(port, () => {

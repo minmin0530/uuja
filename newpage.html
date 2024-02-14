@@ -5,7 +5,11 @@
         <meta charset="utf-8">
         <link rel="stylesheet" href="./newpage.css">
         <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <script src="https://cdn.socket.io/4.5.4/socket.io.min.js" integrity="sha384-/KNQL8Nu5gCHLqwqfQjA689Hhoqgi2S84SNUxC3roTe4EhJ9AfLkp8QiQcU8AMzI" crossorigin="anonymous"></script>
+        <script src="./racegame.js"></script>
         <script>
+
+        window.onload = function() {
             const path = location.pathname.split("/");
             console.log(path);
             const data = {name: path[1], pageName: path[2] };
@@ -24,6 +28,55 @@
                 }
             });
 
+
+
+                const canvas = document.getElementById("canvas");
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerWidth;
+                const ctx = canvas.getContext("2d");
+                const img = new Image();
+                img.onload = function() {
+                    ctx.drawImage(img, 0, 0, window.innerWidth, window.innerWidth);
+                }
+                img.src = "background.png";
+                const imgBall = new Image();
+                imgBall.onload = function() {
+                    ctx.drawImage(imgBall, window.innerWidth / 6, window.innerWidth / 3, window.innerWidth / 2, window.innerWidth / 2);
+                }
+                imgBall.src = "ball.png";
+
+                const imgHina = new Image();
+                imgHina.onload = function() {
+                    ctx.drawImage(imgHina, window.innerWidth / 2, window.innerWidth / 3, window.innerWidth / 2, window.innerWidth / 2);
+                }
+                imgHina.src = "hina.png";
+
+
+
+                const socket = io(
+/*                    "https://sphere-online.com", {
+withCredentials: true,
+extraHeaders: {
+'Access-Control-Allow-Origin': "https://sphere-online.com",
+'Access-Control-Allow-Origin': "https://sphere-online.com/game",
+'Access-Control-Allow-Methods': 'GET, POST',
+'Access-Control-Allow-Credentials': true,
+
+
+},
+extraHeaders: {
+"my-custom-header": "abcd"
+},
+transports: ['polling', 'websocket'],
+}
+*/
+)
+
+                const game = new Game(socket);
+
+            }
+
+
             // document.addEventListener("keydown", (e) => {
             //     document.getElementById("preview").innerHTML =
             //     marked.parse(document.getElementById("textarea").value);
@@ -35,6 +88,7 @@
             <h1>uuja</h1>
         </header>
         <article>
+            <canvas id="canvas"></canvas>
             <section id="pageName">
             </section>
             <section>
@@ -64,6 +118,8 @@
             //         document.getElementById("save").textContent = data.result;
             //     });
             // })
+
+
         </script>
     </body>
 </html>
